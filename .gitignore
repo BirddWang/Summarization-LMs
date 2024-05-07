@@ -1,2 +1,4 @@
-cnndm/
+data/
+__pycache__/
 ids_count.json
+secret.py
