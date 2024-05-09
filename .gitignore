@@ -2,3 +2,6 @@ data/
 __pycache__/
 ids_count.json
 secret.py
+
+### the BRIO code in the BRIO directory
+BRIO/
