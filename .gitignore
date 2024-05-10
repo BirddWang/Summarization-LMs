@@ -1,5 +1,6 @@
 data/
 __pycache__/
+local_cache/
 ids_count.json
 secret.py
 
