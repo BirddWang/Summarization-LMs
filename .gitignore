@@ -6,3 +6,8 @@ secret.py
 
 ### the BRIO code in the BRIO directory
 BRIO/
+
+
+### others
+token_count.ipynb
+summary_checker.ipynb
