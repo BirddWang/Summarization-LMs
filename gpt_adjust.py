@@ -3,8 +3,8 @@ import os
 import json
 import time
 
-from secret import API_KEY
-client = OpenAI(api_key=API_KEY)
+from secret import OPENAI_API_KEYAPI_KEY
+client = OpenAI(api_key=OPENAI_API_KEYAPI_KEY)
 
 def call_api_summarize(article, summary, mname:str = 'gpt-3.5-turbo', eval_max_tokens:int = 128):
     # I will give article and summary, and the function will return the fixed summary
