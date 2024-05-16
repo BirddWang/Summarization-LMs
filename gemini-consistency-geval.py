@@ -4,6 +4,11 @@ genai.configure(api_key=GEMINI_API_KEY)
 from deepeval.models.base_model import DeepEvalBaseLLM
 import time
 import argparse
+################ Gemini API RESTRICITONS ################
+# gemini-1.0-pro: 15RPM, 1M TPM, 1500 RPD
+# gemini-1.5-flash-latest: 15RPM, 1M TPM, 1500 RPD
+# gemini-1.5-pro-latest: 2RPM, 32K TPM, 50 RPD
+
 
 safety_settings = [
     {
@@ -46,7 +51,7 @@ class Gemini(DeepEvalBaseLLM):
 
     async def a_generate(self, prompt: str) -> str:
         summary_model = self.load_model()
-        res = await summary_model.generate_content(
+        res = await summary_model.generate_content_async(
             contents=prompt,
             generation_config={'candidate_count': 1, 'temperature': 0.0}, 
             safety_settings=safety_settings
@@ -58,16 +63,13 @@ class Gemini(DeepEvalBaseLLM):
     
 
 def make_gemini_request(consistency_metric, test_case):
-    count = 10
     while True:
         try:
             res = consistency_metric.measure(test_case = test_case)
-            count = 10
             return res
         except Exception as e:
-            print(f"Limit exceeded, waiting for {count} seconds")
-            time.sleep(count)
-            count += 10
+            print(f"Limit exceeded, waiting for 60 seconds")
+            time.sleep(60)
 
 
 #### eval ####
@@ -87,7 +89,6 @@ def main():
         ],
         model=Gemini(args.model),
         evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
-        async_mode=False
     )
 
     src_dir = args.src
@@ -102,13 +103,14 @@ def main():
                 input=data['article'],
                 actual_output=data['abstract']
             )
-
+            
             make_gemini_request(consistency_metric, test_case)
             with open(store_dir, 'a') as f2:
                 f2.write(json.dumps({
                     'score': consistency_metric.score,
                     'reason': consistency_metric.reason
                 }) + '\n')
+            time.sleep(5)
     print("task completed")
     return
 
@@ -116,5 +118,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--src", default="data/cnndm_sumllm/gpt4/train.jsonl", type=str, help="jsonl input file")
     parser.add_argument("--output", default="data/cnndm_sumllm/gpt4/gemini-consistency_results.jsonl", type=str, help="jsonl output file")
-    parser.add_argument("--model", default="gemini-1.5-pro-latest", type=str, help="model name")
+    parser.add_argument("--model", default="gemini-1.5-flash-latest", type=str, help="model name")
     main()
