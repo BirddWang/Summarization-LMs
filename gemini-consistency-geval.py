@@ -98,6 +98,8 @@ def main():
     with open(src_dir, 'r') as f:
         lines = f.readlines()
         for (i, line) in enumerate(lines):
+            if i < args.start: continue
+
             data = json.loads(line)
             test_case = LLMTestCase(
                 input=data['article'],
@@ -110,7 +112,8 @@ def main():
                     'score': consistency_metric.score,
                     'reason': consistency_metric.reason
                 }) + '\n')
-            time.sleep(5)
+            print(f"Index: {i} Score: {consistency_metric.score} Reason: {consistency_metric.reason}")
+            time.sleep(10)
     print("task completed")
     return
 
@@ -119,4 +122,5 @@ if __name__ == "__main__":
     parser.add_argument("--src", default="data/cnndm_sumllm/gpt4/train.jsonl", type=str, help="jsonl input file")
     parser.add_argument("--output", default="data/cnndm_sumllm/gpt4/gemini-consistency_results.jsonl", type=str, help="jsonl output file")
     parser.add_argument("--model", default="gemini-1.5-flash-latest", type=str, help="model name")
+    parser.add_argument("--start", default=0, type=int, help="start index")
     main()
