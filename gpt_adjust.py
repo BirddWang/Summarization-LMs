@@ -6,7 +6,7 @@ import time
 from secret import OPENAI_API_KEYAPI_KEY
 client = OpenAI(api_key=OPENAI_API_KEYAPI_KEY)
 
-def call_api_summarize(article, summary, mname:str = 'gpt-3.5-turbo', eval_max_tokens:int = 128):
+def _call_api_summarize(article, summary, mname:str = 'gpt-3.5-turbo', eval_max_tokens:int = 128):
     # I will give article and summary, and the function will return the fixed summary
     prompt = f"Article: {article}\n Summary: {summary}\n Above are the article and its summary. Please fix the summary to make it more accurate and concise."
     msg = [
@@ -49,6 +49,6 @@ def call_api_summarize(article, summary, mname:str = 'gpt-3.5-turbo', eval_max_t
 def make_adjust_summarization(article:str, candidates, mname:str, max_tokens:int):
     adj_candidates = []
     for cand in candidates:
-        (model_resp, _, _) = call_api_summarize(article, cand, mname, max_tokens)
+        (model_resp, _, _) = _call_api_summarize(article, cand, mname, max_tokens)
         adj_candidates.append(model_resp)
     return adj_candidates
