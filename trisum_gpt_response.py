@@ -56,6 +56,7 @@ def main(args):
     
     with open(src_files, 'r') as f:
         lines = f.readlines()
+        count = 0
         for line in lines:
             data = json.loads(line)
             document = data['article']
@@ -71,6 +72,11 @@ def main(args):
 
             with open(out_files, 'a') as out:
                 out.write(json.dumps(res) + '\n')
+            count += 1
+            if count == 10:
+                print("Task completed")
+                break
+            
 
     print("Task completed")
     return
