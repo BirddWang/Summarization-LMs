@@ -3,7 +3,8 @@ __pycache__/
 local_cache/
 ids_count.json
 secret.py
-
+.env
+.vscode
 ### the BRIO code in the BRIO directory
 BRIO/
 
