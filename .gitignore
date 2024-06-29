@@ -5,6 +5,8 @@ ids_count.json
 secret.py
 .env
 .vscode
+wandb
+results
 ### the BRIO code in the BRIO directory
 BRIO/
 
